@@ -2,14 +2,17 @@ package day02
 
 import readLinesAs
 
+val forwardOpByAim = mapOf<Int, (a: Int, p: ThreeDimensionPosition) -> ThreeDimensionPosition>(
+    0 to { a, p -> p.copy(horizontal = p.horizontal + a) }
+)
+val defaultForwardOp: (a: Int, p: ThreeDimensionPosition) -> ThreeDimensionPosition =
+    { a, p -> p.copy(horizontal = p.horizontal + a, depth = p.aim * a + p.depth) }
+
 
 data class ThreeDimensionPosition(val horizontal: Int = 0, val depth: Int = 0, val aim: Int = 0) {
-
-    fun forward(amount: Int): ThreeDimensionPosition = if (aim == 0) {
-        copy(horizontal = horizontal + amount)
-    } else {
-        copy(horizontal = horizontal + amount, depth = aim * amount + depth)
-    }
+    fun forward(amount: Int): ThreeDimensionPosition = forwardOpByAim.getOrDefault(aim, defaultForwardOp).invoke(
+        amount, this
+    )
 
     fun down(amount: Int): ThreeDimensionPosition = copy(aim = aim + amount)
 
