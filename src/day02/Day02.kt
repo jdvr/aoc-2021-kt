@@ -68,14 +68,14 @@ val FactoryByCommandName = mapOf<String, CFactory>(
 )
 
 fun calculatePosition(commands: Array<Command>): TwoDimensionPosition {
-    return commands.fold(TwoDimensionPosition()) { acc, c ->
-        acc.then(c)
+    return commands.fold(TwoDimensionPosition()) { currentPosition, command ->
+        currentPosition.then(command)
     }
 }
 
 fun calculatePositionWithAim(commands: Array<Command>): ThreeDimensionPosition {
-    return commands.fold(ThreeDimensionPosition()) { acc, c ->
-        acc.then(c)
+    return commands.fold(ThreeDimensionPosition()) { currentPosition, command ->
+        currentPosition.then(command)
     }
 }
 
