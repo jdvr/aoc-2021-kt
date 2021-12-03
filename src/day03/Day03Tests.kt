@@ -30,27 +30,27 @@ class Day03Tests {
     @Test
     fun `part 1 gamma rate for test input returns 10110`() {
         assertThat(
-            gammaRate(
+            gammaEpsilonRate(
                 testInput
-            )
+            ).first
         ).isEqualTo("10110")
         assertThat(
-            gammaRate(
+            gammaEpsilonRate(
                 arrayOf(
                     arrayOf(1,0),
                     arrayOf(1,1),
                     arrayOf(1,0)
                 )
-            )
+            ).first
         ).isEqualTo("10")
     }
 
     @Test
     fun `part 1 epsilon rate for test input returns 01001`() {
         assertThat(
-            epsilonRate(
+            gammaEpsilonRate(
                 testInput
-            )
+            ).second
         ).isEqualTo("01001")
     }
 

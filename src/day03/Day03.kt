@@ -14,6 +14,36 @@ fun binToDecimal(binary: String): Int {
     }
 }
 
+fun gammaEpsilonRate(numbers: Array<Array<Int>>): Pair<String, String> {
+    val numbersSizeHalf = numbers.size / 2
+    val numberSize = numbers[0].size
+    println(numberSize)
+    val numbOfOnes = ArrayList<Int>(numberSize)
+    for (num in numbers) {
+        for (j in 0 until numberSize) {
+            if (j >= numbOfOnes.size) {
+                numbOfOnes.add(0)
+            }
+            if (num[j] == 1) {
+                numbOfOnes[j] += 1
+            }
+        }
+    }
+
+    var g = ""
+    var e = ""
+    for (n in numbOfOnes) {
+        if (n > numbersSizeHalf) {
+            g += "1"
+            e += "0"
+        } else {
+            g += "0"
+            e += "1"
+        }
+    }
+    return g to e
+}
+
 fun gammaRate(numbers: Array<Array<Int>>): String {
     val numbersSizeHalf = numbers.size / 2
     val numberSize = numbers[0].size
@@ -68,8 +98,7 @@ fun main() {
     val input = readLinesAs("day03/Day03") {
         mapLine(it)
     }.toTypedArray()
-    val g = gammaRate(input)
-    val e = epsilonRate(input)
+    val (g, e) = gammaEpsilonRate(input)
     println("${binToDecimal(g)} * ${binToDecimal(e)} = ${binToDecimal(g) * binToDecimal(e)}")
 
 }
