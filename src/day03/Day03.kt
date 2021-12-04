@@ -5,7 +5,6 @@ import readLinesAs
 fun mapLine(line: String): Array<Int> = line.map { it.digitToInt() }.toTypedArray()
 
 fun binToDecimal(binary: String): Int {
-    println(binary)
     return binary.reversed().foldIndexed(0) { idx, acc, digit ->
         when (digit) {
             '1' -> acc + (1 shl (idx))
@@ -16,19 +15,7 @@ fun binToDecimal(binary: String): Int {
 
 fun gammaEpsilonRate(numbers: Array<Array<Int>>): Pair<String, String> {
     val numbersSizeHalf = numbers.size / 2
-    val numberSize = numbers[0].size
-    println(numberSize)
-    val numbOfOnes = ArrayList<Int>(numberSize)
-    for (num in numbers) {
-        for (j in 0 until numberSize) {
-            if (j >= numbOfOnes.size) {
-                numbOfOnes.add(0)
-            }
-            if (num[j] == 1) {
-                numbOfOnes[j] += 1
-            }
-        }
-    }
+    val numbOfOnes = countNumberOfOnesByPosition(numbers)
 
     var g = ""
     var e = ""
@@ -44,10 +31,8 @@ fun gammaEpsilonRate(numbers: Array<Array<Int>>): Pair<String, String> {
     return g to e
 }
 
-fun gammaRate(numbers: Array<Array<Int>>): String {
-    val numbersSizeHalf = numbers.size / 2
+private fun countNumberOfOnesByPosition(numbers: Array<Array<Int>>): ArrayList<Int> {
     val numberSize = numbers[0].size
-    println(numberSize)
     val numbOfOnes = ArrayList<Int>(numberSize)
     for (num in numbers) {
         for (j in 0 until numberSize) {
@@ -59,39 +44,43 @@ fun gammaRate(numbers: Array<Array<Int>>): String {
             }
         }
     }
-    println(numbOfOnes)
-    return numbOfOnes.map {
-        if (it > numbersSizeHalf) {
-            1
-        } else {
-            0
-        }
-    }.joinToString("")
+    return numbOfOnes
 }
 
-fun epsilonRate(numbers: Array<Array<Int>>): String {
-    val numbersSizeHalf = numbers.size / 2
-
-    val numberSize = numbers[0].size
-    val numbOfOnes = ArrayList<Int>(numberSize)
+private fun countNumberOfOnesAt(numbers: List<Array<Int>>, position: Int): Int {
+    var numbOfOnes = 0
     for (num in numbers) {
-        for (j in 0 until numberSize) {
-            if (j >= numbOfOnes.size) {
-                numbOfOnes.add(0)
-            }
-            if (num[j] == 1) {
-                numbOfOnes[j] += 1
-            }
+        if (num[position] == 1) {
+            numbOfOnes += 1
         }
     }
+    return numbOfOnes
+}
 
-    return numbOfOnes.map {
-        if (it > numbersSizeHalf) {
-            0
-        } else {
-            1
-        }
-    }.joinToString("")
+fun filterDiagnosisNumbers(numbers: Array<Array<Int>>, most: Boolean): Array<Int> {
+    return filterDiagnosisNumbers(numbers.asList(), 0, most)
+}
+
+fun filterDiagnosisNumbers(remaining: List<Array<Int>>, expectedIdx: Int, most: Boolean): Array<Int> {
+    if (remaining.size == 1) {
+        return remaining[0]
+    }
+    val numberOfOnesAt = countNumberOfOnesAt(remaining, expectedIdx).toFloat()
+    val remainignHalfSize = remaining.size / 2f
+    val expected = when {
+        most && numberOfOnesAt >= remainignHalfSize -> 1
+        most && numberOfOnesAt < remainignHalfSize -> 0
+        !most && numberOfOnesAt >= remainignHalfSize -> 0
+        else -> 1
+    }
+    val r = remaining.filter { it[expectedIdx] == expected }
+    return filterDiagnosisNumbers(r, expectedIdx + 1, most)
+}
+
+fun lifeSupportRating(numbers: Array<Array<Int>>): Pair<Int, Int> {
+    val oxygenGeneratorRating = filterDiagnosisNumbers(numbers, true)
+    val CO2ScrubberRating = filterDiagnosisNumbers(numbers, false)
+    return binToDecimal(oxygenGeneratorRating.joinToString("")) to binToDecimal(CO2ScrubberRating.joinToString(""))
 }
 
 fun main() {
@@ -100,6 +89,8 @@ fun main() {
     }.toTypedArray()
     val (g, e) = gammaEpsilonRate(input)
     println("${binToDecimal(g)} * ${binToDecimal(e)} = ${binToDecimal(g) * binToDecimal(e)}")
-
+    println("-- Part Two ---")
+    val (oxygenGeneratorRating, CO2ScrubberRating) = lifeSupportRating(input)
+    println("${oxygenGeneratorRating} * ${CO2ScrubberRating} = ${CO2ScrubberRating * oxygenGeneratorRating}")
 }
 

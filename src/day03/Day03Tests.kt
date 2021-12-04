@@ -37,9 +37,9 @@ class Day03Tests {
         assertThat(
             gammaEpsilonRate(
                 arrayOf(
-                    arrayOf(1,0),
-                    arrayOf(1,1),
-                    arrayOf(1,0)
+                    arrayOf(1, 0),
+                    arrayOf(1, 1),
+                    arrayOf(1, 0)
                 )
             ).first
         ).isEqualTo("10")
@@ -61,7 +61,17 @@ class Day03Tests {
     }
 
     @Test
-    fun `part 2 for test input returns 150`() {
+    fun `part 2 filter`() {
+        assertThat(filterDiagnosisNumbers(testInput, true))
+            .isEqualTo(arrayOf(1, 0, 1, 1, 1))
+        assertThat(filterDiagnosisNumbers(testInput, false))
+            .isEqualTo(arrayOf(0, 1, 0, 1, 0))
+    }
 
+    @Test
+    fun `part 2 lifeSupportRating`() {
+        val (oxygenGeneratorRating, CO2ScrubberRating) = lifeSupportRating(testInput)
+        assertThat(oxygenGeneratorRating).isEqualTo(23)
+        assertThat(CO2ScrubberRating).isEqualTo(10)
     }
 }
